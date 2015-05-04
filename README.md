@@ -14,3 +14,8 @@ To illustrate this architecture, lets describe the flow for when a user marks a 
 * *Functional.* I've heard it's cool.
 * *Immutable API.* Exposed API's are immutable. Backing lists/maps might be mutable.
 * *Typed throughout.* Cuz no one has a clue what's in Flux's actions.
+
+## Running
+
+* Run `pub serve`
+* Open `http://localhost:8080` in your browser.
