@@ -4,7 +4,7 @@ var todoView = registerComponent(() => new TodoView());
 
 class TodoView extends Component {
   Todo get _todo => props["todo"];
-  Channel<Action> get _updates => props["updates"];
+  Channel<Action> get _actions => props["actions"];
   Channel get _remove => props["remove"];
 
   String get _editedText => state["editedText"];
@@ -16,11 +16,11 @@ class TodoView extends Component {
 
   void componentWillMount() {
     _toggleComplete = new Channel();
-    _toggleComplete.stream.listen((_) => _updates.add(toggleComplete(!_todo.isComplete)));
+    _toggleComplete.stream.listen((_) => _actions.add(toggleComplete(!_todo.isComplete)));
 
     _onTextClick = new Channel();
     _onTextClick.stream.listen((_) {
-      _updates.add(beginEditing());
+      _actions.add(beginEditing());
       setState({"editedText": _todo.title});
     });
 
@@ -30,7 +30,7 @@ class TodoView extends Component {
     _onKeyUp = new Channel();
     _onKeyUp.stream
         .where((event) => event.keyCode == 13) // Enter key
-        .listen((event) => _updates.add(finishEditing(_editedText)));
+        .listen((event) => _actions.add(finishEditing(_editedText)));
   }
 
   render() {

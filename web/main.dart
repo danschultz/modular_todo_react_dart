@@ -14,7 +14,7 @@ void main() {
   Logger.root.onRecord.listen((record) => print(record.toString()));
 
   var applicationElement = querySelector("#application");
-  var updates = new Channel<Action<TodoList>>.broadcast();
+  var actions = new Channel<Action<TodoList>>.broadcast();
   var initialState = window.localStorage.containsKey("unidirectional-demo")
       ? new TodoList.fromJson(JSON.decode(window.localStorage["unidirectional-demo"]))
       : new TodoList.initial();
@@ -23,10 +23,10 @@ void main() {
       .map((event) => JSON.decode(event.state))
       .map((json) => new TodoList.fromJson(json))
       .doAction((state) => _logger.info("Popped #${state.filter} off history"));
-  var appState = updates.stream.scan(initialState, (state, action) => action(state));
+  var appState = actions.stream.scan(initialState, (state, action) => action(state));
 
   appState.merge(historyState).listen((state) {
-    react.render(todoListView({"updates": updates, "state": state}), applicationElement);
+    react.render(todoListView({"actions": actions, "state": state}), applicationElement);
   });
 
   appState

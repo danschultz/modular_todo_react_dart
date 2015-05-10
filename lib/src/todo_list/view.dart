@@ -4,7 +4,7 @@ var todoListView = registerComponent(() => new TodoListView());
 
 class TodoListView extends Component {
   TodoList get _state => props["state"];
-  Channel<Action<TodoList>> get _updates => props["updates"];
+  Channel<Action<TodoList>> get _actions => props["actions"];
 
   String get _newTodoText => state["newTodoText"];
 
@@ -22,7 +22,7 @@ class TodoListView extends Component {
     _onKeyUp = new Channel();
     _onKeyUp.stream
         .where((event) => event.keyCode == 13) // Entry key
-        .doAction((_) => _updates.add(createTodo(_newTodoText)))
+        .doAction((_) => _actions.add(createTodo(_newTodoText)))
         .listen((_) => setState({"newTodoText": ""}));
 
     _onShowAllClick = new Channel(sync: true);
@@ -44,7 +44,7 @@ class TodoListView extends Component {
     showAll
         .merge(showActive)
         .merge(showCompleted)
-        .listen((filter) => _updates.add(filterTodos(filter)));
+        .listen((filter) => _actions.add(filterTodos(filter)));
   }
 
   render() {
@@ -68,13 +68,13 @@ class TodoListView extends Component {
   }
 
   _renderTodo(Todo todo) {
-    var updates = new Channel<Action<Todo>>();
-    updates.stream.listen((action) => _updates.add(updateTodo(todo.id, action)));
+    var todoActions = new Channel<Action<Todo>>();
+    todoActions.stream.listen((action) => _actions.add(updateTodo(todo.id, action)));
 
     var remove = new Channel();
-    remove.stream.listen((action) => _updates.add(removeTodo(todo.id)));
+    remove.stream.listen((action) => _actions.add(removeTodo(todo.id)));
 
-    return li({}, todoView({"todo": todo, "updates": updates, "remove": remove}));
+    return li({}, todoView({"todo": todo, "actions": todoActions, "remove": remove}));
   }
 
   Iterable<Todo> _filterTodos(Iterable<Todo> todos, String filter) {
