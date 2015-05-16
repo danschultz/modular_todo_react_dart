@@ -1,4 +1,4 @@
-part of unidirectional_demo.todo_list;
+part of todo_demo.todo_list;
 
 var todoListView = registerComponent(() => new TodoListView());
 

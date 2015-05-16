@@ -1,4 +1,4 @@
-part of unidirectional_demo.framework;
+part of todo_demo.framework;
 
 class Channel<T> implements StreamController<T> {
   final StreamController<T> _controller;

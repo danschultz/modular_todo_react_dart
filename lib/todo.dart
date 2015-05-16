@@ -1,4 +1,4 @@
-library unidirectional_demo.todo;
+library todo_demo.todo;
 
 import 'package:react/react.dart';
 import 'package:unidirectional_demo/framework.dart';

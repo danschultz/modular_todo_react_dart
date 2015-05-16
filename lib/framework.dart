@@ -1,4 +1,4 @@
-library unidirectional_demo.framework;
+library todo_demo.framework;
 
 import 'dart:async';
 import 'package:frappe/frappe.dart';
