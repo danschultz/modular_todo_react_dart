@@ -1,19 +1,19 @@
-part of todo_demo.todo_list;
+part of todo_demo.views.todo_list;
 
-class TodoList {
-  final Iterable<Todo> todos;
+class State {
+  final Iterable<todo.State> todos;
   final int nextId;
   final String filter;
 
-  TodoList(this.todos, this.nextId, this.filter);
+  State(this.todos, this.nextId, this.filter);
 
-  factory TodoList.initial() {
-    return new TodoList([], 0, TodoFilter.all);
+  factory State.initial() {
+    return new State([], 0, TodoFilter.all);
   }
 
-  factory TodoList.fromJson(Map json) {
-    return new TodoList(
-        json["todos"].map((json) => new Todo.fromJson(json)),
+  factory State.fromJson(Map json) {
+    return new State(
+        json["todos"].map((json) => new todo.State.fromJson(json)),
         json["nextId"],
         json["filter"]);
   }

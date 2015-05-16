@@ -1,10 +1,10 @@
-part of todo_demo.todo_list;
+part of todo_demo.views.todo_list;
 
-var todoListView = registerComponent(() => new TodoListView());
+var view = registerComponent(() => new TodoListView());
 
 class TodoListView extends Component {
-  TodoList get _state => props["state"];
-  Channel<Action<TodoList>> get _actions => props["actions"];
+  State get _state => props["state"];
+  Channel<Action<State>> get _actions => props["actions"];
 
   String get _newTodoText => state["newTodoText"];
 
@@ -63,21 +63,21 @@ class TodoListView extends Component {
     ]);
   }
 
-  _renderTodos(Iterable<Todo> todos) {
+  _renderTodos(Iterable<todo.State> todos) {
     return todos.map((todo) => _renderTodo(todo));
   }
 
-  _renderTodo(Todo todo) {
-    var todoActions = new Channel<Action<Todo>>();
-    todoActions.stream.listen((action) => _actions.add(updateTodo(todo.id, action)));
+  _renderTodo(todo.State state) {
+    var todoActions = new Channel<Action<todo.State>>();
+    todoActions.stream.listen((action) => _actions.add(updateTodo(state.id, action)));
 
     var remove = new Channel();
-    remove.stream.listen((action) => _actions.add(removeTodo(todo.id)));
+    remove.stream.listen((action) => _actions.add(removeTodo(state.id)));
 
-    return li({}, todoView({"todo": todo, "actions": todoActions, "remove": remove}));
+    return li({}, todo.view({"state": state, "actions": todoActions, "remove": remove}));
   }
 
-  Iterable<Todo> _filterTodos(Iterable<Todo> todos, String filter) {
+  Iterable<todo.State> _filterTodos(Iterable<todo.State> todos, String filter) {
     return todos.where((todo) {
       return filter == TodoFilter.all
           || filter == TodoFilter.completed && todo.isComplete

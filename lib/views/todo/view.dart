@@ -1,9 +1,9 @@
-part of todo_demo.todo;
+part of todo_demo.views.todo;
 
-var todoView = registerComponent(() => new TodoView());
+var view = registerComponent(() => new TodoView());
 
 class TodoView extends Component {
-  Todo get _todo => props["todo"];
+  State get _state => props["state"];
   Channel<Action> get _actions => props["actions"];
   Channel get _remove => props["remove"];
 
@@ -16,12 +16,12 @@ class TodoView extends Component {
 
   void componentWillMount() {
     _toggleComplete = new Channel();
-    _toggleComplete.stream.listen((_) => _actions.add(toggleComplete(!_todo.isComplete)));
+    _toggleComplete.stream.listen((_) => _actions.add(toggleComplete(!_state.isComplete)));
 
     _onTextClick = new Channel();
     _onTextClick.stream.listen((_) {
       _actions.add(beginEditing());
-      setState({"editedText": _todo.title});
+      setState({"editedText": _state.title});
     });
 
     _onInput = new Channel(sync: true);
@@ -36,7 +36,7 @@ class TodoView extends Component {
   render() {
     var classNames = ["todo"];
 
-    if (_todo.isComplete) {
+    if (_state.isComplete) {
       classNames.add("is-complete");
     }
 
@@ -48,8 +48,8 @@ class TodoView extends Component {
   }
 
   _renderTitle() {
-    if (!_todo.isEditing) {
-      return div({"className": "todo--title", "onClick": _onTextClick}, _todo.title);
+    if (!_state.isEditing) {
+      return div({"className": "todo--title", "onClick": _onTextClick}, _state.title);
     } else {
       return input({"className": "todo--edit-title", "onInput": _onInput, "onKeyUp": _onKeyUp, "value": _editedText});
     }

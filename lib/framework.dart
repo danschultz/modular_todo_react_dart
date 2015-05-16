@@ -3,5 +3,5 @@ library todo_demo.framework;
 import 'dart:async';
 import 'package:frappe/frappe.dart';
 
-part 'src/framework/action.dart';
-part 'src/framework/channel.dart';
+part 'framework/action.dart';
+part 'framework/channel.dart';
